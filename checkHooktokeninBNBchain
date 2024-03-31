@@ -1,0 +1,24 @@
+function getHOOKBalance(walletAddress) {
+  const BNB_TOKEN_ADDRESS = '0xa260E12d2B924cb899AE80BB58123ac3fEE1E2F0';
+  const apiKey = 'H6N9IGYP1SB9MCYPGQ5G9DGQK6N461UHJ1';
+
+  const urlBNB = `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${BNB_TOKEN_ADDRESS}&address=${walletAddress}&tag=latest&apikey=${apiKey}`;
+
+  try {
+    const responseBNB = UrlFetchApp.fetch(urlBNB);
+    if (responseBNB.getResponseCode() == 200) {
+      const resultBNB = JSON.parse(responseBNB.getContentText());
+      
+      if (resultBNB.status == '0') {
+        return 0;
+      }
+
+      return resultBNB.result / Math.pow(10, 18); // Assuming token has 18 decimals
+    }
+    
+    return 0;
+  } catch (error) {
+    console.error('Error fetching HOOK balance:', error);
+    return 0;
+  }
+}
