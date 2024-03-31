@@ -1,0 +1,81 @@
+function showCopyUI(addresses, amounts) {
+  // Create the overlay div
+  const overlay = document.createElement("div");
+  overlay.id = "overlay";
+  overlay.style.cssText =
+    "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgb(0 0 0 / 91%); display: flex; justify-content: center; align-items: center; z-index: 1000;";
+
+  // Create the copy buttons
+  const copyAddressButton = document.createElement("button");
+  copyAddressButton.id = "copyAddressButton";
+  copyAddressButton.textContent = "Copy địa chỉ ví";
+  copyAddressButton.style.cssText =
+    "padding: 10px 20px; font-size: 16px; cursor: pointer; margin-right: 10px; ";
+
+  const copyAmountButton = document.createElement("button");
+  copyAmountButton.id = "copyAmountButton";
+  copyAmountButton.textContent = "Copy số lượng token";
+  copyAmountButton.style.cssText =
+    "padding: 10px 20px; font-size: 16px; cursor: pointer; ";
+
+  // Append the buttons to the overlay, then overlay to the body
+  overlay.appendChild(copyAddressButton);
+  overlay.appendChild(copyAmountButton);
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    // Add click event listener to copy address button
+    document
+      .getElementById("copyAddressButton")
+      .addEventListener("click", function () {
+        // Use the Clipboard API
+        navigator.clipboard
+          .writeText(addresses)
+          .then(() => {
+            console.log("Addresses copied to clipboard");
+            alert("Đã copy danh sách địa chỉ ví vào bộ nhớ.");
+          })
+          .catch((err) => {
+            console.error("Failed to copy addresses: ", err);
+          });
+      });
+
+    // Add click event listener to copy amount button
+    document
+      .getElementById("copyAmountButton")
+      .addEventListener("click", function () {
+        // Use the Clipboard API
+        navigator.clipboard
+          .writeText(amounts)
+          .then(() => {
+            console.log("Amounts copied to clipboard");
+            alert("Đã copy danh sách số lượng token vào bộ nhớ.");
+          })
+          .catch((err) => {
+            console.error("Failed to copy amounts: ", err);
+          });
+      });
+  }, 500);
+}
+
+function getAddressAndAmount() {
+  const parties = document.querySelectorAll(
+    ".TokenTopHolders_topHoldersGrid__uA8Pc .TokenTopHolders_topHolderCounterparty__xspM5"
+  );
+
+  const balances = document.querySelectorAll(
+    ".TokenTopHolders_topHoldersGrid__uA8Pc .TokenTopHolders_alignRight__Rto6f.TokenTopHolders_topHolderBalance__TV5_a"
+  );
+
+  const addresses = Array.from(parties)
+    .map((party) => party.textContent.trim())
+    .join("\n");
+
+  const amounts = Array.from(balances)
+    .map((balance) => balance.textContent.trim())
+    .join("\n");
+
+  showCopyUI(addresses, amounts);
+}
+
+getAddressAndAmount();
