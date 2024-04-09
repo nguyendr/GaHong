@@ -1,0 +1,103 @@
+function getAddressValues2() {
+  const addressElements = document.querySelectorAll(".Transactions_tabs__CyKos .Address_text__3KeP9.Address_link__IH8kv");
+
+  const addresses = Array.from(addressElements)
+    .map((addressElement) => {
+      const href = addressElement.getAttribute('href');
+      if (href.includes("/explorer/address/") && !href.includes("/explorer/entity/")) {
+        const address = href.split('/').pop();
+        return address;
+      } else {
+        return null;
+      }
+    })
+    .filter(address => address !== null)
+    .join("\n");
+
+  return addresses;
+}
+
+function showCopyUI2(addresses) {
+  const overlay = document.createElement("div");
+  overlay.id = "overlay";
+  overlay.style.cssText =
+    "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.91); display: flex; justify-content: center; align-items: center; z-index: 1000;";
+
+  const copyAddressButton = document.createElement("button");
+  copyAddressButton.id = "copyAddressButton2"; 
+  copyAddressButton.textContent = "Copy địa chỉ ví"; // Đổi tên nút bấm
+  copyAddressButton.style.cssText =
+    "padding: 10px 20px; font-size: 16px; cursor: pointer; ";
+
+  overlay.appendChild(copyAddressButton);
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    copyAddressButton.addEventListener("click", function () {
+      navigator.clipboard
+        .writeText(addresses)
+        .then(() => {
+          console.log("Addresses copied to clipboard");
+          alert("Đã sao chép danh sách địa chỉ.");
+          overlay.style.display = "none";
+        })
+        .catch((err) => {
+          console.error("Failed to copy addresses: ", err);
+        });
+    });
+  }, 500);
+}
+
+function getAddressAndCopy2() {
+  const addresses = getAddressValues2();
+  showCopyUI2(addresses);
+}
+
+function getAddressValues1() {
+  const addressElements = document.querySelectorAll(".Transactions_tabs__CyKos.Tabs_container__L5SMU .Address_container__0RUv1");
+
+  const addresses = Array.from(addressElements)
+    .map((addressElement) => addressElement.textContent.trim())
+    .join("\n");
+
+  return addresses;
+}
+
+function showCopyUI1(addresses) {
+  const overlay = document.createElement("div");
+  overlay.id = "overlay";
+  overlay.style.cssText =
+    "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.91); display: flex; justify-content: center; align-items: center; z-index: 1000;";
+
+  const copyAddressButton = document.createElement("button");
+  copyAddressButton.id = "copyAddressButton1"; 
+  copyAddressButton.textContent = "Copy Nhãn ví"; // Đổi tên nút bấm
+  copyAddressButton.style.cssText =
+    "padding: 10px 20px; font-size: 16px; cursor: pointer; ";
+
+  overlay.appendChild(copyAddressButton);
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    copyAddressButton.addEventListener("click", function () {
+      navigator.clipboard
+        .writeText(addresses)
+        .then(() => {
+          console.log("Addresses copied to clipboard");
+          alert("Đã sao chép danh sách địa chỉ.");
+          overlay.style.display = "none";
+        })
+        .catch((err) => {
+          console.error("Failed to copy addresses: ", err);
+        });
+    });
+  }, 500);
+}
+
+function getAddressAndCopy1() {
+  const addresses = getAddressValues1();
+  showCopyUI1(addresses);
+}
+
+getAddressAndCopy2(); // Gọi hàm thứ hai trước
+getAddressAndCopy1(); // Gọi hàm đầu tiên sau
